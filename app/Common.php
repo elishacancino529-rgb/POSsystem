@@ -13,3 +13,11 @@
  *
  * @see: https://codeigniter.com/user_guide/extending/common.html
  */
+
+if (! function_exists('app_base_url')) {
+    function app_base_url(): string
+    {
+        $base = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/')), '/');
+        return $base === '.' ? '' : $base;
+    }
+}

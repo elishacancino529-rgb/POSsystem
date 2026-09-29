@@ -1,37 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>User Accounts</title>
-</head>
-<body>
-    <nav>
-        <a href="/">Home</a> |
-        <a href="/about">About</a> |
-        <a href="/customers">Customer Accounts</a> |
-        <a href="/users">User Accounts</a>
-    </nav>
-
-    <h1>User Accounts</h1>
-
-    <table border="1" cellpadding="8" cellspacing="0">
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Full Name</th>
-                <th>Role</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            // $users comes from Users::index() — loop through and print one row per record.
-            foreach ($users as $user): ?>
-                <tr>
-                    <td><?= esc($user['username']) ?></td>
-                    <td><?= esc($user['name']) ?></td>
-                    <td><?= esc($user['role']) ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</body>
-</html>
+<?= $this->extend('partials/header') ?>
+<?php $appBase = app_base_url(); ?>
+<?= $this->section('content') ?>
+<section class="page-heading"><div><span class="eyebrow accent">DIRECTORY / TEAM</span><h1>User accounts</h1><p>Manage the people who keep your POS workspace moving.</p></div><a class="button primary" href="<?= esc($appBase . '/users/new') ?>">+ New user</a></section>
+<div class="table-card"><div class="table-toolbar"><strong><?= count($users) ?> records</strong><span>Team directory</span></div><div class="table-wrap"><table><thead><tr><th>User</th><th>Full name</th><th>Avatar</th><th></th></tr></thead><tbody><?php foreach ($users as $user): ?><tr><td><div class="person"><span class="avatar"><?php if (! empty($user['avatar'])): ?><img src="<?= esc($appBase . '/uploads/' . rawurlencode($user['avatar'])) ?>" alt="<?= esc($user['full_name']) ?> avatar"><?php else: ?><?= esc(strtoupper(substr($user['full_name'], 0, 2))) ?><?php endif; ?></span><strong><?= esc($user['username']) ?></strong></div></td><td><?= esc($user['full_name']) ?></td><td><span class="pill"><?= ! empty($user['avatar']) ? 'Uploaded' : 'Placeholder' ?></span></td><td class="align-right"><a class="table-action" href="<?= esc($appBase . '/users/edit/' . $user['id']) ?>">Edit</a></td></tr><?php endforeach; ?><?php if (! $users): ?><tr><td colspan="4" class="empty-state">No users yet. Add the first account to get started.</td></tr><?php endif; ?></tbody></table></div></div>
+<?= $this->endSection() ?>

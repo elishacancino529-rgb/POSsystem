@@ -1,0 +1,7 @@
+<?= $this->extend('partials/header') ?>
+<?php $appBase = app_base_url(); ?>
+<?= $this->section('content') ?>
+<section class="page-heading"><div><span class="eyebrow accent">DIRECTORY / TEAM</span><h1><?= esc($formTitle) ?></h1><p>Use a JPG or PNG image up to 2MB for the profile avatar.</p></div><a class="button ghost" href="<?= esc($appBase . '/users') ?>">Back to users</a></section>
+<?= $this->include('partials/form_errors') ?>
+<form class="form-card" method="post" enctype="multipart/form-data" action="<?= esc($appBase . ($user ? '/users/update/' . $user['id'] : '/users')) ?>"><?= csrf_field() ?><label>Username <span>*</span><input type="text" name="username" value="<?= esc(old('username', $user['username'] ?? '')) ?>" required></label><label>Full name <span>*</span><input type="text" name="full_name" value="<?= esc(old('full_name', $user['full_name'] ?? '')) ?>" required></label><?php if ($user): ?><label>Profile picture <small>JPG or PNG · max 2MB</small><input type="file" name="avatar" accept="image/jpeg,image/png"><?php if (! empty($user['avatar'])): ?><span class="current-file">Current avatar: <?= esc($user['avatar']) ?></span><?php endif; ?></label><?php endif; ?><div class="form-actions"><a class="button ghost" href="<?= esc($appBase . '/users') ?>">Cancel</a><button class="button primary" type="submit">Save user</button></div></form>
+<?= $this->endSection() ?>

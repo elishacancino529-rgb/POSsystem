@@ -1,38 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Customer Accounts</title>
-</head>
-<body>
-    <nav>
-        <a href="/">Home</a> |
-        <a href="/about">About</a> |
-        <a href="/customers">Customer Accounts</a> |
-        <a href="/users">User Accounts</a>
-    </nav>
-
-    <h1>Customer Accounts</h1>
-
-    <table border="1" cellpadding="8" cellspacing="0">
-        <thead>
-            <tr>
-                <th>Full Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            // $customers comes from Customers::index() — loop through and print one row per record.
-            // esc() HTML-escapes each value to prevent malformed or malicious output.
-            foreach ($customers as $customer): ?>
-                <tr>
-                    <td><?= esc($customer['name']) ?></td>
-                    <td><?= esc($customer['email']) ?></td>
-                    <td><?= esc($customer['phone']) ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</body>
-</html>
+<?= $this->extend('partials/header') ?>
+<?php $appBase = app_base_url(); ?>
+<?= $this->section('content') ?>
+<section class="page-heading"><div><span class="eyebrow accent">DIRECTORY / CUSTOMERS</span><h1>Customer accounts</h1><p>Keep customer contact details accurate and ready for the next sale.</p></div><a class="button primary" href="<?= esc($appBase . '/customers/new') ?>">+ New customer</a></section>
+<div class="table-card"><div class="table-toolbar"><strong><?= count($customers) ?> records</strong><span>Contact directory</span></div><div class="table-wrap"><table><thead><tr><th>Customer</th><th>Email</th><th>Phone</th><th></th></tr></thead><tbody><?php foreach ($customers as $customer): ?><tr><td><strong><?= esc($customer['full_name']) ?></strong></td><td><?= esc($customer['email']) ?></td><td><?= esc($customer['phone'] ?: '—') ?></td><td class="align-right"><a class="table-action" href="<?= esc($appBase . '/customers/edit/' . $customer['id']) ?>">Edit</a></td></tr><?php endforeach; ?><?php if (! $customers): ?><tr><td colspan="4" class="empty-state">No customers yet. Add the first account to get started.</td></tr><?php endif; ?></tbody></table></div></div>
+<?= $this->endSection() ?>
