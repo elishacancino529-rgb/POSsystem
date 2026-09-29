@@ -28,6 +28,15 @@ to your `app` folder. The affected files can be copied or merged from
 Copy `env` to `.env` and tailor for your app, specifically the baseURL
 and any database settings.
 
+## POS Console setup
+
+1. Import `database.sql` into MySQL, or configure the existing database and run `php spark migrate` to add the `avatar` column to `users`.
+2. Set `app.baseURL` and the `database.default.*` values in `.env`.
+3. Point the web server document root to this project's `public` folder.
+4. Make sure `public/uploads` is writable by PHP. Uploaded profile pictures are validated as JPG/PNG files up to 2MB and stored as prepared 256px thumbnails.
+
+The account workflows are available at `/customers/new`, `/customers/edit/{id}`, `/users/new`, and `/users/edit/{id}`.
+
 ## Important Change with index.php
 
 `index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
