@@ -35,6 +35,10 @@ and any database settings.
 3. Point the web server document root to this project's `public` folder.
 4. Make sure `public/uploads` is writable by PHP. Uploaded profile pictures are validated as JPG/PNG files up to 2MB and stored as prepared 256px thumbnails.
 
+## Authentication
+
+Run `php spark migrate` after importing the database to add the password column and assign the temporary password `password` to existing password-less user records. Sign in at `/login`; protected customer and user routes redirect there when no session is active. New users must have a password, and logout destroys the session.
+
 The account workflows are available at `/customers/new`, `/customers/edit/{id}`, `/users/new`, and `/users/edit/{id}`.
 
 ## Important Change with index.php
