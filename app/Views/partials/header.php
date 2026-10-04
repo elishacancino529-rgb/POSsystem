@@ -3,6 +3,8 @@ $path = trim(uri_string(), '/');
 $active = $active ?? ($path === '' ? 'dashboard' : (str_starts_with($path, 'customers') ? 'customers' : (str_starts_with($path, 'users') ? 'users' : (str_starts_with($path, 'about') ? 'about' : 'dashboard'))));
 $pageTitle = $pageTitle ?? ucfirst($active);
 $appBase = app_base_url();
+$loggedIn = (bool) session()->get('isLoggedIn');
+$loggedName = session()->get('full_name') ?: 'Guest';
 ?>
 <!doctype html>
 <html lang="en">
@@ -25,7 +27,7 @@ $appBase = app_base_url();
         <div class="sidebar-footer"><span class="status-dot"></span> System online</div>
     </aside>
     <main class="main-content">
-        <header class="topbar"><span class="eyebrow">POINT OF SALE / <?= esc(strtoupper($pageTitle)) ?></span><span class="user-chip"><span class="avatar avatar-small">PC</span> Admin</span></header>
+        <header class="topbar"><span class="eyebrow">POINT OF SALE / <?= esc(strtoupper($pageTitle)) ?></span><?php if ($loggedIn): ?><span class="user-chip"><span class="avatar avatar-small"><?= esc(strtoupper(substr($loggedName, 0, 2))) ?></span> <?= esc($loggedName) ?> · <a class="logout-link" href="<?= esc($appBase . '/logout') ?>">Log out</a></span><?php else: ?><a class="button ghost login-link" href="<?= esc($appBase . '/login') ?>">Log in</a><?php endif; ?></header>
         <?php if (session()->getFlashdata('message')): ?><div class="flash success"><?= esc(session()->getFlashdata('message')) ?></div><?php endif; ?>
         <?= $this->renderSection('content') ?>
     </main>

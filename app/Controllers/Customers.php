@@ -40,7 +40,7 @@ class Customers extends BaseController
             'phone'     => trim((string) $this->request->getPost('phone')),
         ]);
 
-        return redirect()->to(site_url('customers'))->with('message', 'Customer account created.');
+        return redirect()->to(app_base_url() . '/customers')->with('message', 'Customer account created.');
     }
 
     public function edit(int $id)
@@ -76,6 +76,6 @@ class Customers extends BaseController
             'phone'     => trim((string) $this->request->getPost('phone')),
         ]);
 
-        return redirect()->to(site_url('customers'))->with('message', 'Customer account updated.');
+        return redirect()->to(app_base_url() . '/customers')->with('message', 'Customer account updated.');
     }
 }

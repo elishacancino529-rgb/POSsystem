@@ -27,18 +27,25 @@ class Users extends BaseController
         $rules = [
             'username' => 'required|min_length[3]|max_length[50]|is_unique[users.username]',
             'full_name' => 'required|min_length[2]',
+            'password' => 'required|min_length[8]',
+            'password_confirm' => 'required|matches[password]',
         ];
 
         if (! $this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+        if ((string) $this->request->getPost('password') !== '' && $this->request->getPost('password') !== $this->request->getPost('password_confirm')) {
+            return redirect()->back()->withInput()->with('errors', ['password_confirm' => 'Password confirmation does not match.']);
+        }
+
         (new UserModel())->insert([
             'username' => trim((string) $this->request->getPost('username')),
             'full_name' => trim((string) $this->request->getPost('full_name')),
+            'password' => password_hash((string) $this->request->getPost('password'), PASSWORD_DEFAULT),
         ]);
 
-        return redirect()->to(site_url('users'))->with('message', 'User account created.');
+        return redirect()->to(app_base_url() . '/users')->with('message', 'User account created.');
     }
 
     public function edit(int $id)
@@ -62,6 +69,8 @@ class Users extends BaseController
         $rules = [
             'username' => 'required|min_length[3]|max_length[50]|is_unique[users.username,id,' . $id . ']',
             'full_name' => 'required|min_length[2]',
+            'password' => 'permit_empty|min_length[8]',
+            'password_confirm' => 'permit_empty|matches[password]',
             'avatar'   => 'permit_empty|is_image[avatar]|mime_in[avatar,image/jpg,image/jpeg,image/png]|max_size[avatar,2048]',
         ];
 
@@ -69,10 +78,18 @@ class Users extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+        if ((string) $this->request->getPost('password') !== '' && $this->request->getPost('password') !== $this->request->getPost('password_confirm')) {
+            return redirect()->back()->withInput()->with('errors', ['password_confirm' => 'Password confirmation does not match.']);
+        }
+
         $data = [
             'username' => trim((string) $this->request->getPost('username')),
             'full_name' => trim((string) $this->request->getPost('full_name')),
         ];
+
+        if ((string) $this->request->getPost('password') !== '') {
+            $data['password'] = password_hash((string) $this->request->getPost('password'), PASSWORD_DEFAULT);
+        }
 
         $file = $this->request->getFile('avatar');
         if ($file && $file->isValid() && ! $file->hasMoved()) {
@@ -95,6 +112,6 @@ class Users extends BaseController
 
         $model->update($id, $data);
 
-        return redirect()->to(site_url('users'))->with('message', 'User account updated.');
+        return redirect()->to(app_base_url() . '/users')->with('message', 'User account updated.');
     }
 }
